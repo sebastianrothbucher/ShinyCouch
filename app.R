@@ -80,7 +80,7 @@ fetchAndShowTodos <- function(input, output, session) {
 }
 
 shinyApp(
-  ui = fluidPage(splitLayout(
+  ui = fluidPage(HTML('<style type="text/css">#pie {border: 2px dashed lightgrey; overflow: hidden; } #pie img {margin: -10px; }</style>'), flowLayout(
     verticalLayout(
       tags$div(id = "todos"),
       verticalLayout(
@@ -88,7 +88,7 @@ shinyApp(
         actionButton("addNew", label = "Add")
       )
     ),
-    plotOutput("pie")
+    plotOutput("pie", width = 300, height = 300)
   )),
   server = function(input, output, session) {
     fetchAndShowTodos(input, output, session)
