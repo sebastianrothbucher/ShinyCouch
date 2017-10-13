@@ -64,6 +64,15 @@ showTodos <- function(input, output, session) {
       observeCount <<- observeCount + 1
     }
   })
+  df <-
+    data.frame(status = unlist(lapply(todos, function(r) {
+      if (r$done)
+        'done'
+      else
+        'open'
+    })), cnt = c(1))
+  dfAgg <- aggregate(cnt ~ status, df, FUN = sum)
+  output$pie <- renderPlot(pie(dfAgg$cnt, labels = dfAgg$status, radius=1))
 }
 fetchAndShowTodos <- function(input, output, session) {
   fetchTodos()
@@ -71,12 +80,15 @@ fetchAndShowTodos <- function(input, output, session) {
 }
 
 shinyApp(
-  ui = fluidPage(verticalLayout(
-    tags$div(id = "todos"),
+  ui = fluidPage(splitLayout(
     verticalLayout(
-      textInput("newTitle", label = "New Todo: "),
-      actionButton("addNew", label = "Add")
-    )
+      tags$div(id = "todos"),
+      verticalLayout(
+        textInput("newTitle", label = "New Todo: "),
+        actionButton("addNew", label = "Add")
+      )
+    ),
+    plotOutput("pie")
   )),
   server = function(input, output, session) {
     fetchAndShowTodos(input, output, session)
