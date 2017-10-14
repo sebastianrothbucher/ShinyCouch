@@ -99,8 +99,9 @@ shinyApp(
         fetchAndShowTodos(input, output, session)
       }
     })
-    session$onSessionEnded(function() {
-      stopApp()
-    })
+    # testing outside RStudio - helps ending server
+    #session$onSessionEnded(function() {
+    #  stopApp()
+    #})
   }
 )
